@@ -60,8 +60,17 @@ public class ShareMenuModule extends ReactContextBaseJavaModule implements Activ
 
     if (Intent.ACTION_SEND.equals(action)) {
       if ("text/plain".equals(type)) {
-        data.putString(DATA_KEY, intent.getStringExtra(Intent.EXTRA_TEXT));
-        return data;
+        if(intent.getStringExtra(Intent.EXTRA_TEXT) != null){
+          data.putString(DATA_KEY, intent.getStringExtra(Intent.EXTRA_TEXT));
+          return data;        
+        }else{
+          Uri fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+          if (fileUri != null) {
+            data.putString(DATA_KEY, fileUri.toString());
+            return data;
+          }
+          return null;
+        }
       }
 
       Uri fileUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
